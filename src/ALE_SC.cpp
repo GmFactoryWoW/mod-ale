@@ -645,7 +645,9 @@ public:
         PLAYERHOOK_ON_UPDATE_SKILL,
         PLAYERHOOK_CAN_RESURRECT,
         PLAYERHOOK_ON_PLAYER_RELEASED_GHOST,
-        PLAYERHOOK_ON_BEFORE_LOGOUT
+        PLAYERHOOK_ON_BEFORE_LOGOUT,
+        PLAYERHOOK_ON_VICTIM_REWARD_BEFORE,
+        PLAYERHOOK_ON_VICTIM_REWARD_AFTER
     }) { }
 
     void OnPlayerResurrect(Player* player, float /*restore_percent*/, bool /*applySickness*/) override
@@ -971,6 +973,16 @@ public:
     void OnPlayerBeforeLogout(Player* player) override
     {
         sALE->OnPlayerBeforeLogout(player);
+    }
+
+    void OnPlayerVictimRewardBefore(Player* killer, Player* victim, uint32& killerTitle, int32& victimRank) override
+    {
+        sALE->OnHonorRewardBefore(killer, victim, killerTitle, victimRank);
+    }
+
+    void OnPlayerVictimRewardAfter(Player* killer, Player* victim, uint32& killerTitle, int32& victimRank, float& honor) override
+    {
+        sALE->OnHonorRewardAfter(killer, victim, killerTitle, victimRank, honor);
     }
 };
 

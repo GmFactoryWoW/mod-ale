@@ -514,6 +514,8 @@ public:
     uint32 OnPlayerDealDamage(Player* player, Unit* pVictim, uint32 damage, DamageEffectType damagetype);
     void OnPlayerReleasedGhost(Player* player);
     void OnPlayerBeforeLogout(Player* player);
+    void OnHonorRewardBefore(Player* killer, Player* victim, uint32& killerTitle, int32& victimRank);
+    void OnHonorRewardAfter(Player* killer, Player* victim, uint32& killerTitle, int32& victimRank, float& honor);
 
     /* Vehicle */
     void OnInstall(Vehicle* vehicle);

@@ -794,6 +794,9 @@ namespace LuaGlobalFunctions
      *     PLAYER_EVENT_ON_MODIFY_HEAL_RECEIVED                 =     71,       // (event, player, target, heal, spellInfo) - Can return new heal amount
      *     PLAYER_EVENT_ON_DEAL_DAMAGE                          =     72,       // (event, player, target, damage, damagetype) - Can return new damage amount
      *     PLAYER_EVENT_ON_RELEASED_GHOST                       =     73,       // (event, player)
+     *     PLAYER_EVENT_ON_BEFORE_LOGOUT                        =     74,       // (event, player)
+     *     PLAYER_EVENT_ON_HONOR_REWARD_BEFORE                  =     75,       // (event, killer, victim, killerTitle, victimRank) - Can return new killerTitle and victimRank
+     *     PLAYER_EVENT_ON_HONOR_REWARD_AFTER                   =     76,       // (event, killer, victim, killerTitle, victimRank, honor) - Can return new honor amount
      * };
      * </pre>
      *

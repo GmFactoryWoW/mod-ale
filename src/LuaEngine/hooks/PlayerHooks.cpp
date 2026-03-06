@@ -981,3 +981,62 @@ void ALE::OnPlayerBeforeLogout(Player* player)
     Push(player);
     CallAllFunctions(PlayerEventBindings, key);
 }
+
+void ALE::OnHonorRewardBefore(Player* killer, Player* victim, uint32& killerTitle, int32& victimRank)
+{
+    START_HOOK(PLAYER_EVENT_ON_HONOR_REWARD_BEFORE);
+    Push(killer);
+    Push(victim);
+    Push(killerTitle);
+    Push(victimRank);
+    int killerTitleIndex = lua_gettop(L) - 1;
+    int victimRankIndex  = lua_gettop(L);
+    int n = SetupStack(PlayerEventBindings, key, 4);
+
+    while (n > 0)
+    {
+        int r = CallOneFunction(n--, 4, 2);
+
+        if (lua_isnumber(L, r + 0))
+        {
+            killerTitle = CHECKVAL<uint32>(L, r + 0);
+            ReplaceArgument(killerTitle, killerTitleIndex);
+        }
+        if (lua_isnumber(L, r + 1))
+        {
+            victimRank = CHECKVAL<int32>(L, r + 1);
+            ReplaceArgument(victimRank, victimRankIndex);
+        }
+
+        lua_pop(L, 2);
+    }
+
+    CleanUpStack(4);
+}
+
+void ALE::OnHonorRewardAfter(Player* killer, Player* victim, uint32& killerTitle, int32& victimRank, float& honor)
+{
+    START_HOOK(PLAYER_EVENT_ON_HONOR_REWARD_AFTER);
+    Push(killer);
+    Push(victim);
+    Push(killerTitle);
+    Push(victimRank);
+    Push(honor);
+    int honorIndex = lua_gettop(L);
+    int n = SetupStack(PlayerEventBindings, key, 5);
+
+    while (n > 0)
+    {
+        int r = CallOneFunction(n--, 5, 1);
+
+        if (lua_isnumber(L, r))
+        {
+            honor = CHECKVAL<float>(L, r);
+            ReplaceArgument(honor, honorIndex);
+        }
+
+        lua_pop(L, 1);
+    }
+
+    CleanUpStack(5);
+}
