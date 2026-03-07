@@ -1135,6 +1135,9 @@ public:
             ///- Initialize Lua Engine
             LOG_INFO("ALE", "Initialize ALE Lua Engine...");
             ALE::Initialize();
+
+            ///- Run ALE scripts early so they can register handlers for config/startup events.
+            sALE->RunScripts();
         }
 
         sALE->OnConfigLoad(reload, true);
@@ -1177,9 +1180,6 @@ public:
 
     void OnBeforeWorldInitialized() override
     {
-        ///- Run ALE scripts.
-        // in multithread foreach: run scripts
-        sALE->RunScripts();
         sALE->OnConfigLoad(false, false); // Must be done after ALE is initialized and scripts have run.
     }
 };
