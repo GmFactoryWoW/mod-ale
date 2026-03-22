@@ -317,6 +317,73 @@ namespace LuaPlayer
     }
 
     /**
+     * Returns the number of free slots in the [Player]'s inventory (backpack and equipped bags).
+     *
+     * @return uint32 freeSlots
+     */
+    int GetInventoryFreeSlots(lua_State* L, Player* player)
+    {
+        uint32 freeSlots = 0;
+
+        // Backpack slots in INVENTORY_SLOT_BAG_0 (INVENTORY_SLOT_ITEM_START to INVENTORY_SLOT_ITEM_END)
+        for (uint8 i = INVENTORY_SLOT_ITEM_START; i < INVENTORY_SLOT_ITEM_END; ++i)
+        {
+            if (!player->GetItemByPos(INVENTORY_SLOT_BAG_0, i))
+                ++freeSlots;
+        }
+
+        // Check equipped bags slots (INVENTORY_SLOT_BAG_START to INVENTORY_SLOT_BAG_END)
+        for (uint8 i = INVENTORY_SLOT_BAG_START; i < INVENTORY_SLOT_BAG_END; ++i)
+        {
+            if (Bag* bag = player->GetBagByPos(i))
+            {
+                for (uint32 j = 0; j < bag->GetBagSize(); ++j)
+                {
+                    if (!player->GetItemByPos(i, j))
+                        ++freeSlots;
+                }
+            }
+        }
+
+        ALE::Push(L, freeSlots);
+        return 1;
+    }
+
+    /**
+     * Returns the number of free slots in the [Player]'s bank (main bank and bank bags).
+     *
+     * @return uint32 freeSlots
+     */
+    int GetBankFreeSlots(lua_State* L, Player* player)
+    {
+        uint32 freeSlots = 0;
+
+        // Check main bank slots (BANK_SLOT_ITEM_START to BANK_SLOT_ITEM_END)
+        for (uint8 i = BANK_SLOT_ITEM_START; i < BANK_SLOT_ITEM_END; ++i)
+        {
+            if (!player->GetItemByPos(INVENTORY_SLOT_BAG_0, i))
+                ++freeSlots;
+        }
+
+        // Check bank bags slots (BANK_SLOT_BAG_START to BANK_SLOT_BAG_END)
+        for (uint8 i = BANK_SLOT_BAG_START; i < BANK_SLOT_BAG_END; ++i)
+        {
+            if (Bag* bag = player->GetBagByPos(i))
+            {
+                for (uint32 j = 0; j < bag->GetBagSize(); ++j)
+                {
+                    if (!player->GetItemByPos(i, j))
+                        ++freeSlots;
+                }
+            }
+        }
+
+        ALE::Push(L, freeSlots);
+        return 1;
+    }
+
+
+    /**
      * Returns `true` if the [Player] has a Tank Specialization, `false` otherwise.
      *
      * @return bool HasTankSpec
@@ -808,6 +875,28 @@ namespace LuaPlayer
     int GetHonorPoints(lua_State* L, Player* player)
     {
         ALE::Push(L, player->GetHonorPoints());
+        return 1;
+    }
+
+    /**
+     * Returns the [Player]s today Honor points.
+     *
+     * @return uint32 todayHonorPoints
+     */
+    int GetTodayHonorPoints(lua_State* L, Player* player)
+    {
+        ALE::Push(L, player->GetUInt32Value(PLAYER_FIELD_TODAY_CONTRIBUTION));
+        return 1;
+    }
+
+    /**
+     * Returns the [Player]s yesterday Honor points.
+     *
+     * @return uint32 yesterdayHonorPoints
+     */
+    int GetYesterdayHonorPoints(lua_State* L, Player* player)
+    {
+        ALE::Push(L, player->GetUInt32Value(PLAYER_FIELD_YESTERDAY_CONTRIBUTION));
         return 1;
     }
 
@@ -1491,6 +1580,28 @@ namespace LuaPlayer
     int GetLifetimeKills(lua_State* L, Player* player)
     {
         ALE::Push(L, player->GetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS));
+        return 1;
+    }
+
+    /**
+     * Returns the [Player]s today Honorable Kills
+     *
+     * @return uint32 todayKills
+     */
+    int GetTodayKills(lua_State* L, Player* player)
+    {
+        ALE::Push(L, uint32(player->GetUInt16Value(PLAYER_FIELD_KILLS, 0)));
+        return 1;
+    }
+
+    /**
+     * Returns the [Player]s yesterday Honorable Kills
+     *
+     * @return uint32 yesterdayKills
+     */
+    int GetYesterdayKills(lua_State* L, Player* player)
+    {
+        ALE::Push(L, uint32(player->GetUInt16Value(PLAYER_FIELD_KILLS, 1)));
         return 1;
     }
 
