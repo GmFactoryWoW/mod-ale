@@ -649,9 +649,9 @@ namespace LuaCreature
         float dist = ALE::CHECKVAL<float>(L, 5, 0.0f);
         int32 aura = ALE::CHECKVAL<int32>(L, 6, 0);
 
-        ThreatMgr const& threatMgr = creature->GetThreatMgr();
+        ThreatManager const& threatMgr = creature->GetThreatMgr();
 
-        if (threatMgr.isThreatListEmpty())
+        if (threatMgr.IsThreatListEmpty())
             return 1;
         if (position >= threatMgr.GetThreatListSize())
             return 1;
@@ -730,7 +730,7 @@ namespace LuaCreature
      */
     int GetAITargets(lua_State* L, Creature* creature)
     {
-        ThreatMgr const& threatMgr = creature->GetThreatMgr();
+        ThreatManager const& threatMgr = creature->GetThreatMgr();
 
         lua_createtable(L, threatMgr.GetThreatListSize(), 0);
         int tbl = lua_gettop(L);
